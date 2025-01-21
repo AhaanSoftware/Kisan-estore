@@ -1,0 +1,99 @@
+/* Header.css */
+.header {
+    background-color: white;
+    padding: 15px 0;
+    box-shadow: 0 4px 8px 0 rgba(188, 188, 188, 0.2), 0 6px 20px 0 rgba(130, 130, 130, 0.19);
+
+  }
+  
+  .header-logo {
+    width: 250px;
+  }
+  
+  .store-text h6 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .store-text p {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .search-bar input {
+    border-radius: 20px 0 0 20px;
+    border: 1px solid #3b2a84;
+    height: 40px;
+  }
+  
+  .search-bar button {
+    border-radius: 0 20px 20px 0;
+    background-color: #4AAE37;
+    color: #fff;
+  }
+  
+  .search-bar button i {
+    font-size: 16px;
+  }
+  
+  .nav-link {
+    color: #333 !important;
+    font-size: 17px !important;
+    margin: 0 25px;
+    text-decoration: none;
+  }
+  
+  .nav-link:hover {
+    color: #007bff;
+  }
+  
+  .btn-success {
+    background-color: #4AAE37 !important;
+    border: none !important;
+    font-size: 12px;
+    padding: 10px 25px !important;
+    border-radius: 30px !important;
+  }
+  
+  .btn-outline-primary {
+    border: 1px solid #3b2a84 !important;
+    border-radius: 30px !important;
+    font-size: 14px;
+    padding: 10px 20px !important;
+    color: #3b2a84 !important;
+  }
+  
+  .btn-outline-primary:hover {
+    background: none !important;
+    color: #3b2a84;
+  }
+  .my-3{
+    color: #3b2a84 !important;
+  }
+
+  
+  @media (max-width: 768px) {
+    .header {
+      padding: 10px 0;
+    }
+  
+    .store-text {
+      text-align: left;
+      font-size: 12px;
+    }
+  
+    .search-bar input {
+      font-size: 12px;
+    }
+  
+    .nav {
+      flex-wrap: wrap;
+    }
+  
+    .nav-link {
+      margin: 5px;
+      font-size: 12px;
+    }
+  }
+  
