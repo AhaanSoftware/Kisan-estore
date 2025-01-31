@@ -11,6 +11,8 @@ import Header from "./Home/Header/Header";
 import BottomFooter from "./Home/Footer/BottomFooter";
 import Footer from "./Home/Footer/Footer";
 import NewestProducts from "./Home/Body/NewestProducts";
+import EndFooter from "./Home/Footer/EndFooter"
+import Enquiry from "./Home/Body/Enquiry"
 
 const Home = () => {
   return (
@@ -25,8 +27,10 @@ const Home = () => {
       <PopularProduct />
       <NewestProducts/>
       <CallforMoreUpdate />
+      <Enquiry/>
       <Footer />
       <BottomFooter />
+      <EndFooter/>
     </>
   );
 };
