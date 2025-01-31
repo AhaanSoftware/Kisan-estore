@@ -1,8 +1,8 @@
 import React from "react";
-import Logo from "../Images/Logo.png";
-import Apple from "../Images/Apple.png";
-import Barcode from "../Images/barcode.png";
-import Googlepay from "../Images/Googlepay.png";
+import Logo from "../../../Images/Logo.png";
+import Apple from "../../../Images/Apple.png";
+import Barcode from "../../../Images/barcode.png";
+import Googlepay from "../../../Images/Googlepay.png";
 import "./Footer.css"; 
 
 const Footer = () => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import "./TopHeader.css";
-import logo from '../Images/language.png';
+import logo from '../../../Images/language.png';
+import { PiHandbagBold } from "react-icons/pi";
 
 const TopHeader = () => {
   return (
@@ -25,11 +26,10 @@ const TopHeader = () => {
           {/* My Account and Shopping Cart */}
           <div className="d-flex align-items-center gap-4 col-auto">
             <div className="icon-group d-flex align-items-center">
-              <i className="bi bi-person"></i>
               <span className="ms-2">My Account</span>
             </div>
             <div className="icon-group d-flex align-items-center position-relative">
-              <i className="bi bi-bag"></i>
+              <PiHandbagBold />
               {/* Notification Badge */}
               <span className="notification-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 3

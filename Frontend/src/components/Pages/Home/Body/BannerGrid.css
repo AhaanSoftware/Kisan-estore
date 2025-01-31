@@ -1,0 +1,52 @@
+.banner-grid-section{
+
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.banner-left {
+    background: url("http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Untitled-design-2.jpg")
+      no-repeat center center/cover;
+  }
+  
+  .banner-right {
+    background: url("http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Untitled-design-4.jpg")
+      no-repeat center center/cover;
+  }
+  
+  /* Content styling */
+  .banner-grid-content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    margin-top: 70px;
+  }
+  .banner-grid-heading{
+    color: #000;
+    font-size: 34px;
+    margin-bottom: 20px;
+  }
+  .shop-btn-1 {
+    background: #3b2171 !important;
+    color: white;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    border-radius: 25px !important;
+    transition: background 0.3s ease-in-out;
+  }
+  .shop-btn-2 {
+    background: #3b2171 !important;
+    color: white;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    border-radius: 25px !important;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .shop-btn:hover {
+    background-color: #e6b800;
+  }

@@ -1,0 +1,179 @@
+{
+    "bestOffers": [
+      {
+        "id": 1,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "DeHaatt Starter (Mychorriza 90%)",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 2,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "TOI Jamniket - Plant Growth Promoter",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 3,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "TOI Jamniket - Plant Growth Promoter",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 4,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "Katyayani Finish IT - Larvicide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 5,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "Katyayani Anti Virus - Organic Viricide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 6,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "Katyayani Anti Virus - Organic Viricide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      }
+    ],
+    "popularProducts": [
+      {
+        "id": 7,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "DeHaatt Starter (Mychorriza 90%)",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 8,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "TOI Jamniket - Plant Growth Promoter",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 9,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "TOI Jamniket - Plant Growth Promoter",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 10,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "Katyayani Finish IT - Larvicide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 11,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "Katyayani Anti Virus - Organic Viricide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 12,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "Katyayani Anti Virus - Organic Viricide ",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      }
+    ],
+    "highTechProducts": [
+      {
+        "id": 13,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "DeHaatt Starter (Mychorriza 90%)",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 14,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "TOI Jamniket - Plant Growth Promoter",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 15,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "TOI Jamniket - Plant Growth Promoter",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 16,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "Katyayani Finish IT - Larvicide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 17,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "Katyayani Anti Virus - Organic Viricide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 18,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "Katyayani Anti Virus - Organic Viricide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      }
+    ],
+    "newestProducts": [
+      {
+        "id": 19,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "DeHaatt Starter (Mychorriza 90%)",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 20,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "TOI Jamniket - Plant Growth Promoter",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 21,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "TOI Jamniket - Plant Growth Promoter",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 22,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "Katyayani Finish IT - Larvicide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 23,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-4.png",
+        "name": "Katyayani Anti Virus - Organic Viricide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      },
+      {
+        "id": 24,
+        "image": "http://woocommerce.ahaanmedia.com/wp-content/uploads/2025/01/Best-Offers-2-5.png",
+        "name": "Katyayani Anti Virus - Organic Viricide",
+        "price": "Rs 299.00",
+        "oldPrice": "Rs 320.00"
+      }
+    ]
+  }
+  

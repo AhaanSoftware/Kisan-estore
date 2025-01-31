@@ -1,0 +1,257 @@
+.newest-products-wrapper {
+    background: #ffffff; /* Light blue background */
+    width: 100%;
+  }
+  
+  .product-section {
+      background: None; /* Light blue background */
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      margin-top: 20px;
+    }
+    
+    .shop-by-brand-text {
+      font-size: 30px;
+      font-weight: bold;
+      color: #312783 !important;
+      text-transform: uppercase;
+    }
+    
+    .view-brands-btn {
+      font-size: 18px !important;
+      padding: 13px 31px !important;
+      border: 1px solid #4AAE37 !important;
+      color: #4AAE37 !important;
+      border-radius: 50px !important;
+      background: none !important;
+    }
+    
+    .view-all-btn:hover {
+      background: #2eb62c;
+      color: white;
+    }
+    
+    /* Swiper Container */
+    .product-swiper {
+      position: relative;
+    }
+    
+    /* Product Card */
+    .product-card {
+      margin-top: 40px;
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding-top: 50px;
+      padding-bottom: 50px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .product-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    /* Product Image */
+    .product-image {
+      max-width: 50%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+    
+    /* Product Name */
+    .product-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      margin-bottom: 5px;
+      transition: transform 0.3s ease;
+    }
+    
+    /* Product Price */
+    .product-price {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    
+    .new-price {
+      color: #2eb62c;
+      font-size: 18px;
+    }
+    
+    .old-price {
+      text-decoration: line-through;
+      color: #999;
+      margin-left: 5px;
+    }
+    
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+      position: absolute;
+      bottom: -60px;
+      left: 0;
+      right: 0;
+      transition: bottom 0.3s ease;
+    }
+    
+    .product-card:hover .button-group {
+      bottom: 20px;
+    }
+    
+    /* Updating button styles */
+    .buy-now-btn {
+      background: #2eb62c !important;
+      border: none !important;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 40px !important;
+      border-radius: 50px !important;
+      transition: background 0.3s ease-in-out;
+    }
+    
+    .buy-now-btn:hover {
+      background: #228b22;
+    }
+    
+    .cart-btn {
+      background: #3b2171 !important;
+      color: white;
+      border: none !important;
+      padding: 8px 13px !important;
+      font-size: 16px !important;
+      border-radius: 50% !important;
+      transition: background 0.3s ease-in-out;
+    }
+    
+    .cart-btn:hover {
+      background: #3b2171;
+    }
+    
+    /* Swiper Navigation Buttons */
+    .swiper-button-prev,
+    .swiper-button-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #312783;
+      color: #fff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px !important;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out;
+    }
+    
+    .swiper-button-next:after,
+    .swiper-rtl .swiper-button-prev:after {
+      font-size: 12px !important;
+    }
+    
+    .swiper-button-prev:after,
+    .swiper-rtl .swiper-button-next:after {
+      font-size: 12px !important;
+    }
+    
+    .swiper-button-prev:hover,
+    .swiper-button-next:hover {
+      background: #312783;
+    }
+    
+    .swiper-button-prev {
+      left: -12px !important;
+    }
+    
+    .swiper-button-next {
+      right: -12px !important;
+    }
+    
+    .divider {
+      flex-grow: 1; /* Takes up the remaining space between the title and the button */
+      border: 0; /* Remove default border */
+      border-top: 1px solid #000 !important; /* Customize the color and thickness of the hr */
+      margin: 0 15px; /* Adjust the spacing around the hr */
+    }
+    
+    .product-section {
+      position: relative;
+    }
+    
+    .swiper-container-wrapper {
+      position: relative;
+    }
+    
+    .swiper-button-prev,
+    .swiper-button-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+    
+    .swiper-button-prev {
+      left: 10px; /* Adjust position as needed */
+    }
+    
+    .swiper-button-next {
+      right: 10px; /* Adjust position as needed */
+    }
+    
+    .product-swiper {
+      padding-bottom: 30px; /* Space for navigation buttons */
+    }
+    
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .product-image {
+      width: 100%;
+      object-fit: cover;
+    }
+    
+    .product-name {
+      font-size: 1rem;
+      margin: 10px 0;
+    }
+    
+    .product-price {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .buy-now-btn,
+    .cart-btn {
+      padding: 8px 16px;
+      font-size: 0.875rem;
+    }

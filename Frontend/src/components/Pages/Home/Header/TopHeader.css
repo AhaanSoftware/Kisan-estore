@@ -72,6 +72,9 @@
     color: #fff;
     border: none;
   }
+  .icon-group.d-flex.align-items-center.position-relative{
+    font-size: 18px !important;
+  }
   
   @media (max-width: 768px) {
     /* Tablet and Mobile View */
