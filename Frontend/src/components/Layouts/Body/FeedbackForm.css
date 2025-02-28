@@ -1,0 +1,18 @@
+.feedback-container{
+    max-width: 900px !important;
+}
+.feedback-container-lable{
+    padding: 25px 0px 75px 0px;
+}
+.feedback-container-lable h3{
+    font-size: 32px;
+    color: #312783;
+    font-weight: 700;
+}
+.feedback-container-lable p{
+    font-size: 22px;
+    color: #727171;
+    font-weight: 400;
+    
+    margin:0;
+}
