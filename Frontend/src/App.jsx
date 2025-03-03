@@ -10,7 +10,8 @@ import Signup from './Components/Layouts/User/Signup';
 import Login from './Components/Layouts/User/Login';
 import EmailVerificationForm from './Components/Layouts/User/Email';
 import ContactUs from "./Components/Layouts/Body/ContactUs"
-import FeedbackForm from "./Components/Layouts/Body/FeedbackForm"
+import FeedbackForm from "./Components/Layouts/Body/FeedbackForm";
+import OurCategory from "./components/Layouts/Category/OurCategory"
 function App() {
 
   const productId=['8930614771949', '8929771684077' ]
@@ -28,6 +29,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactUs/>} />
         <Route path="/feedback" element={<FeedbackForm/>} />
+        <Route path="/category" element={<OurCategory/>} />
   
       </Routes>
       <Enquiry/>
