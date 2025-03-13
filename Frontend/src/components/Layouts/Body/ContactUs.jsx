@@ -28,7 +28,7 @@ const ContactUs = () => {
           backgroundImage: `url(${ContactBannerImg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          height: "350px",
+          height: "300px",
           display: "flex",
           alignItems: "center",
         }}
