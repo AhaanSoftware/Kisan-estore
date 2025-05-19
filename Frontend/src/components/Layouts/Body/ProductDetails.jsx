@@ -3,88 +3,84 @@ import axios from 'axios';
 
 const ProductDetails = ({ productId }) => {
   const [product, setProduct] = useState(null);
+  const [customer, setCustomer] = useState(null);
+  const [userType, setUserType] = useState(null); // 'csc' or 'general'
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [checkoutId, setCheckoutId] = useState(null);
 
-  const shopifyStoreUrl = 'https://kisanestoredev.myshopify.com/api/2023-01/graphql.json';
-  const accessToken = 'c2c0d5ac5aeae2d629915df7e7e422b6';
+  const STOREFRONT_API_URL = 'https://kisanestoredev.myshopify.com/api/2023-01/graphql.json';
+  const STOREFRONT_ACCESS_TOKEN = '9fa0275c43c9d14f1ad4ab3478472f5c';
 
- // Function to get cookie by name
-const getCookie = (name) => {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : null;
-};
+  // Check token
+  useEffect(() => {
+    const token = localStorage.getItem('customerAccessToken');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
 
-// Function to check if PHPSESSID cookie exists (indicating session is active)
-const isAuthenticated = () => {
-  const sessionId = getCookie('PHPSESSID');  // Check if PHPSESSID exists
-  return sessionId ? true : false;  // Return true if session is active, false if not
-};
+    const fetchCustomer = async () => {
+      const query = `{
+        customer(customerAccessToken: "${token}") {
+          id
+          email
+          tags
+        }
+      }`;
 
-// Example of using isAuthenticated to check session before adding to cart
-const handleAddToCart = () => {
-  const isLoggedIn = isAuthenticated();
-  if (isLoggedIn) {
-      // Proceed with adding to cart logic
-      console.log('Item added to cart');
-  } else {
-      alert('Please log in to add items to your cart.');
-      // Redirect to login page if session is not found
-      window.location.href = 'http://localhost/Connect_v1/User.php';  // Example redirect to login page
-  }
-};
+      try {
+        const res = await axios.post(STOREFRONT_API_URL, { query }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': STOREFRONT_ACCESS_TOKEN
+          }
+        });
+        const customerData = res.data.data.customer;
+        setCustomer(customerData);
+        setUserType(customerData.tags.includes('csc_id') ? 'csc' : 'general');
+      } catch (err) {
+        localStorage.removeItem('customerAccessToken');
+        window.location.href = '/login';
+      }
+    };
 
+    fetchCustomer();
+  }, []);
 
-  // Function to simulate setting a mock cookie (for testing purposes)
-  const setMockCookie = () => {
-    document.cookie = "authToken=mock-auth-token; path=/; domain=localhost; Secure; SameSite=None";
-  };
-
-  // Fetch product data using GraphQL from Shopify
+  // Fetch Product
   useEffect(() => {
     const fetchProduct = async () => {
-      const query = `
-        query {
-          product(id: "gid://shopify/Product/${productId}") {
-            title
-            descriptionHtml
-            variants(first: 1) {
-              edges {
-                node {
-                  priceV2 {
-                    amount
-                    currencyCode
-                  }
-                }
-              }
-            }
-            images(first: 1) {
-              edges {
-                node {
-                  src
-                  altText
-                }
+      const query = `{
+        product(id: "gid://shopify/Product/${productId}") {
+          id
+          title
+          descriptionHtml
+          images(first: 1) {
+            edges { node { src altText } }
+          }
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                priceV2 { amount currencyCode }
               }
             }
           }
         }
-      `;
+      }`;
 
       try {
-        const response = await axios.post(
-          shopifyStoreUrl,
-          { query },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Shopify-Storefront-Access-Token': accessToken,
-            },
+        const res = await axios.post(STOREFRONT_API_URL, { query }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': STOREFRONT_ACCESS_TOKEN
           }
-        );
-        setProduct(response.data.data.product);
+        });
+
+        setProduct(res.data.data.product);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch product data');
+        console.error('Failed to load product:', err);
         setLoading(false);
       }
     };
@@ -92,43 +88,30 @@ const handleAddToCart = () => {
     fetchProduct();
   }, [productId]);
 
-  // Handle Add to Cart logic
-  
-
-  // Handle Buy Now logic
-  const handleBuyNowClick = () => {
-    const authToken = isAuthenticated();
-    if (authToken) {
-      const clientId = '072eaf48-1e2b-4c42-cc2c-86a00796e2c2';  // Replace with your actual client ID
-      const redirectUri = 'http://localhost:5173/index.php?route=auth/Auth';  // Ensure this matches the registered redirect URI
-      const authorizationEndpoint = 'https://connect.csc.gov.in/account/authorize';
-      const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=read`;
-
-      window.location.href = authUrl;  // Redirect to OAuth authorization
-    } else {
-      window.location.href = 'http://localhost/Connect_v1/User.php'; // Redirect to login if not authenticated
-    }
+  // Add to Cart Logic
+  const handleAddToCartClick = async () => {
+    alert('Add to Cart logic would go here.');
   };
 
-  // If loading, show loading message
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const handleBuyNowClick = () => {
+    window.location.href = '/checkout';
+  };
 
-  // If there is an error, show error message
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (loading || !product || !customer) return <div>Loading...</div>;
 
-  // If the product is fetched successfully, display product details
+  const variant = product.variants.edges[0].node;
+  const originalPrice = parseFloat(variant.priceV2.amount);
+  const finalPrice = userType === 'csc' ? (originalPrice * 0.8).toFixed(2) : originalPrice.toFixed(2);
+
   return (
-    <div className="product-details">
+    <div>
       <h1>{product.title}</h1>
-      <img src={product.images.edges[0].node.src} alt={product.images.edges[0].node.altText} />
-      <p dangerouslySetInnerHTML={{ __html: product.descriptionHtml }} />
-      <p>{product.variants.edges[0].node.priceV2.amount} {product.variants.edges[0].node.priceV2.currencyCode}</p>
-      <button onClick={handleAddToCart}>Add to Cart</button> {/* Add to Cart button */}
-      <button onClick={handleBuyNowClick}>Buy Now</button> {/* Buy Now button */}
+      <p><strong>User Type:</strong> {userType === 'csc' ? 'CSC User' : 'General User'}</p>
+      <img src={product.images.edges[0].node.src} alt={product.title} />
+      <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml }} />
+      <p><strong>Price:</strong> {finalPrice} {variant.priceV2.currencyCode}</p>
+      <button onClick={handleBuyNowClick}>Buy Now</button>
+      <button onClick={handleAddToCartClick}>Add to Cart</button>
     </div>
   );
 };

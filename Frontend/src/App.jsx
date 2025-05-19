@@ -1,41 +1,56 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import Router components from v6
-import TopHeader from './Components/Layouts/Header/TopHeader';
-import Header from './Components/Layouts/Header/Header';
-import Footer from './Components/Layouts/Footer/Footer';
-import ShopByBrands from './Components/Layouts/Body/ShopByBrands';
-import CollectionPage from './Components/Layouts/Body/CollectionProducts'; // Import your new CollectionPage
-import Enquiry from "./Components/Layouts/Body/Enquiry"
-import ProductDetails from './Components/Layouts/Body/ProductDetails';
-import Signup from './Components/Layouts/User/Signup';
-import Login from './Components/Layouts/User/Login';
-import EmailVerificationForm from './Components/Layouts/User/Email';
-import ContactUs from "./Components/Layouts/Body/ContactUs"
-import FeedbackForm from "./Components/Layouts/Body/FeedbackForm";
-import OurCategory from "./components/Layouts/Category/OurCategory"
-function App() {
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProductDetails from './Components/pages/ProductDetails';
+import Checkout from './Components/pages/Checkout';
+import { UserProvider } from './Components/contexts/UserContext'; // Correct path to UserContext
+import AuthCallback from './Components/pages/auth-callback'; // Correct path to AuthCallback
+import LoginPage from './Components/pages/LoginPage'; // Correct path to LoginPage
+import AdminDiscountPage from './pages/AdminDiscountPage';
+import CartPage from './Components/pages/CartPage';
 
-  const productId=['8930614771949', '8929771684077' ]
-  
+const App = () => {
+  const [user, setUser] = useState(null);
+
+  // Effect to check if a token exists in sessionStorage or cookies
+  useEffect(() => {
+    const token = sessionStorage.getItem('shopify_token');
+    if (token) {
+      setUser({ token }); // You could store more user info here if needed
+    }
+  }, []);
+
+  const handleLogin = (userData) => {
+    // Set user data to state (this could be a token or full user info)
+    setUser(userData);
+    sessionStorage.setItem('shopify_token', userData.token);
+  };
+
+  const handleLogout = () => {
+    // Clear user data
+    setUser(null);
+    sessionStorage.removeItem('shopify_token');
+  };
+
   return (
-    <Router>
-      <TopHeader />
-      <Header />
-      
-      <Routes>
-        <Route path="/" element={<ShopByBrands />} /> 
-        <Route path="/brands/:handle" element={<CollectionPage />} /> 
-        <Route path="/details" element={<ProductDetails productId={productId}/>} /> 
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/contact" element={<ContactUs/>} />
-        <Route path="/feedback" element={<FeedbackForm/>} />
-        <Route path="/category" element={<OurCategory/>} />
-  
-      </Routes>
-      <Enquiry/>
-      <Footer />
-    </Router>
+    <UserProvider >
+      <Router>
+        <div className="App">
+
+
+          <Routes>
+            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/" element={<ProductDetails productId="8930629976301" />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/auth-callback" element={<AuthCallback />} />
+            <Route path="/admin/discounts" element={<AdminDiscountPage />} /> 
+            <Route path="/cart" element={<CartPage />} />
+          </Routes>
+
+        </div>
+      </Router>
+    </UserProvider>
   );
-}
+};
 
 export default App;
