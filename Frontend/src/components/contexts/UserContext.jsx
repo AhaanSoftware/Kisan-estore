@@ -1,3 +1,4 @@
+// src/contexts/UserContext.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -16,30 +17,25 @@ export const UserProvider = ({ children }) => {
 
     const isCSC = tags.some(tag => tag.startsWith('csc_id:'));
     setUserType(isCSC ? 'csc' : 'general');
-
-    sessionStorage.setItem('customerAccessToken', accessToken);
   };
 
   useEffect(() => {
-    const token = sessionStorage.getItem('customerAccessToken');
-    if (!token) return;
-
-    setAccessToken(token);
-
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/user?token=${token}`);
-        const { email, firstName, tags } = res.data;
+        const res = await axios.get('http://localhost:3000/api/me', {
+          withCredentials: true, // send cookie
+        });
+
+        const { accessToken, email, firstName, tags } = res.data;
 
         setUserData({
-          accessToken: token,
+          accessToken,
           email,
-          name: firstName || 'Guest',
-          tags: tags || [],
+          name: firstName,
+          tags,
         });
       } catch (err) {
-        console.error('Invalid token or failed to fetch user:', err);
-        sessionStorage.removeItem('customerAccessToken');
+        console.error('User fetch failed. Possibly no cookie/session:', err);
         setAccessToken(null);
       }
     };

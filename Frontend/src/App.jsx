@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProductDetails from './Components/pages/ProductDetails';
-import Checkout from './Components/pages/Checkout';
+import CheckoutPage from './Components/pages/CheckoutPage';
 import { UserProvider } from './Components/contexts/UserContext'; // Correct path to UserContext
 import AuthCallback from './Components/pages/auth-callback'; // Correct path to AuthCallback
 import LoginPage from './Components/pages/LoginPage'; // Correct path to LoginPage
@@ -40,8 +40,8 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
             <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/" element={<ProductDetails productId="8930629976301" />} />
-            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/" element={<ProductDetails productId="8930640429293" />} />
+            <Route path="/checkout/:encodedCartId" element={<CheckoutPage />} />
             <Route path="/auth-callback" element={<AuthCallback />} />
             <Route path="/admin/discounts" element={<AdminDiscountPage />} /> 
             <Route path="/cart" element={<CartPage />} />

@@ -1,3 +1,4 @@
+// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from '../contexts/UserContext';
@@ -14,13 +15,12 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const res = await axios.post('http://localhost:3000/api/login', {
-        email,
-        password,
-        productId: '8930629976301',
-      });
+      const res = await axios.post(
+        'http://localhost:3000/api/login',
+        { email, password, productId: '8930640429293' }, // hardcoded product ID
+        { withCredentials: true } // so backend sets the cookie
+      );
 
       const { accessToken, user } = res.data;
       const { email: userEmail, firstName, tags } = user;
@@ -28,18 +28,14 @@ const LoginPage = () => {
       setUserData({
         accessToken,
         email: userEmail,
-        name: firstName || 'Guest',
-        tags: tags || [],
+        name: firstName,
+        tags,
       });
-
-      if (accessToken) {
-        sessionStorage.setItem('customerAccessToken', accessToken);
-      }
 
       navigate('/');
     } catch (err) {
       console.error('Login failed:', err);
-      setError('Invalid credentials. Please try again.');
+      setError('Invalid credentials');
     } finally {
       setLoading(false);
     }
@@ -56,49 +52,24 @@ const LoginPage = () => {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           placeholder="Email"
           required
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
         />
         <input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={e => setPassword(e.target.value)}
           placeholder="Password"
           required
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
         />
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: '#007BFF',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-          }}
-        >
+        <button type="submit" disabled={loading}>
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <hr />
-      <button
-        onClick={handleGoogleLogin}
-        style={{
-          width: '100%',
-          padding: '10px',
-          backgroundColor: '#DB4437',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-        }}
-      >
+      <button onClick={handleGoogleLogin}>
         Login with Google
       </button>
     </div>
