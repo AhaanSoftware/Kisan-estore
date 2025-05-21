@@ -1,46 +1,80 @@
-// src/pages/CartPage.js
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cart, setCart] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCartItems(cart);
+    const fetchCart = async () => {
+      try {
+        const res = await axios.post('http://localhost:3000/api/cart/fetch', {}, { withCredentials: true });
+        setCart(res.data); // Store the full cart in the state
+      } catch (err) {
+        const message = err.response?.data?.error || 'Failed to fetch cart';
+        setError(message);
+      }
+    };
+
+    fetchCart();
   }, []);
 
-  const getTotal = () => {
-    return cartItems.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0).toFixed(2);
-  };
-
-  const handleCheckout = () => {
-    const lineItems = cartItems.map(
-      item => `${item.variantId.split('/').pop()}:${item.quantity}`
+  const handleCheckout = async () => {
+  try {
+    const res = await axios.post(
+      'http://localhost:3000/api/cart/checkout',
+      { cartId: cart.cartId },
+      { withCredentials: true }
     );
-    const checkoutUrl = `https://kisanestoredev.myshopify.com/cart/${lineItems.join(',')}`;
-    window.location.href = checkoutUrl;
-  };
+    const { checkoutUrl } = res.data;
+    window.open(checkoutUrl, '_blank');
+  } catch (err) {
+    alert('Failed to generate checkout: ' + (err.response?.data?.error || err.message));
+  }
+};
+
+
+  if (error) return <div>{error}</div>;
+  if (!cart) return <div>Loading cart...</div>;
 
   return (
-    <div>
-      <h1>Cart</h1>
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty</p>
+    <div style={{ padding: '2rem', backgroundColor: '#f4f4f4' }}>
+      <h2>Your Cart</h2>
+      {cart.items.length === 0 ? (
+        <p>Your cart is empty!</p>
       ) : (
         <>
-          <ul>
-            {cartItems.map((item, i) => (
-              <li key={i}>
-                {item.title} - {item.quantity} x ₹{item.price}
-              </li>
+          <p>Total items: {cart.items.reduce((sum, item) => sum + item.quantity, 0)}</p>
+          <div>
+            {cart.items.map((item) => (
+              <div
+                key={item.variantId}
+                style={{ padding: '10px', border: '1px solid #ddd', marginBottom: '10px' }}
+              >
+                <h3>Variant ID: {item.variantId}</h3>
+                <p>Quantity: {item.quantity}</p>
+              </div>
             ))}
-          </ul>
-          <p>Total: ₹{getTotal()}</p>
-          <button onClick={handleCheckout}>Checkout</button>
+          </div>
         </>
       )}
+     <button
+  onClick={handleCheckout}
+  style={{
+    padding: '10px 20px',
+    backgroundColor: '#28a745',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer'
+  }}
+>
+  Go to Checkout
+</button>
+
     </div>
   );
 };
 
 export default CartPage;
+

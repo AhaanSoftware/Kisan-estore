@@ -208,13 +208,74 @@ router.get('/me', async (req, res) => {
   const sessionId = req.cookies.customer_sid;
   if (!sessionId) return res.status(401).json({ error: 'Not logged in' });
 
+  // Lookup session
   const session = await Session.findOne({ sessionId });
   if (!session || new Date() > session.expiresAt) {
     return res.status(401).json({ error: 'Session expired or invalid' });
   }
 
-  res.json({ user: session.customer });
+  try {
+    // Use customerAccessToken to fetch fresh Shopify customer data
+    const customerRes = await axios.post(
+      `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2023-01/graphql.json`,
+      {
+        query: `
+          query {
+            customer(customerAccessToken: "${session.accessToken}") {
+              id
+              email
+              firstName
+              lastName
+              tags
+            }
+          }
+        `
+      },
+      {
+        headers: {
+          'X-Shopify-Storefront-Access-Token': process.env.SHOPIFY_STOREFRONT_TOKEN,
+          'Content-Type': 'application/json',
+        }
+      }
+    );
+
+    const customer = customerRes.data.data.customer;
+    if (!customer) {
+      return res.status(401).json({ error: 'Invalid or expired customer token' });
+    }
+
+    // Send Shopify customer data including customerId
+    res.json({
+      customerId: customer.id,
+      email: customer.email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      tags: customer.tags,
+      userType: customer.tags.some(tag => tag.startsWith('csc_id')) ? 'csc' : 'general',
+    });
+
+  } catch (err) {
+    console.error('Failed to fetch customer from Shopify:', err.response?.data || err.message);
+    res.status(500).json({ error: 'Failed to fetch customer' });
+  }
 });
+router.get('/session', async (req, res) => {
+  const sessionId = req.cookies.customer_sid;
+  if (!sessionId) return res.status(401).json({ error: 'Not logged in' });
+
+  const session = await Session.findOne({ sessionId });
+  if (!session || new Date() > session.expiresAt) {
+    return res.status(401).json({ error: 'Session expired or invalid' });
+  }
+
+  res.json({ 
+    sessionId: session.sessionId,
+    customer: session.customer,
+    expiresAt: session.expiresAt,
+  });
+});
+
+
 router.post('/logout', async (req, res) => {
   const sessionId = req.cookies.customer_sid;
   if (sessionId) {
@@ -223,7 +284,6 @@ router.post('/logout', async (req, res) => {
   }
   res.json({ message: 'Logged out' });
 });
-
 
 
 module.exports = router;
