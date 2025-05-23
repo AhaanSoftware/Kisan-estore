@@ -22,13 +22,15 @@ const cartSchema = new mongoose.Schema({
     type: String,
     required: false,
     index: true,
-    unique: false // Allow multiple guest carts, only one per customer handled in code
+    unique: true,
+    sparse: true,// Allow multiple guest carts, only one per customer handled in code
   },
   sessionId: {
     type: String,
     required: false,
     index: true,
-    unique: false // Still needed for guest tracking
+    unique: true,
+    sparse: true, // Still needed for guest tracking
   },
   cartId: {
     type: String,
