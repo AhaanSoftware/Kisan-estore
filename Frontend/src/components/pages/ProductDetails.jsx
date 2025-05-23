@@ -1,14 +1,18 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+
+const SHOPIFY_DOMAIN = 'kisanestoredev.myshopify.com';
+const SHOPIFY_TOKEN = '9fa0275c43c9d14f1ad4ab3478472f5c';
 
 const ProductDetails = ({ productId: hardcodedId }) => {
   const { accessToken, userType, name, email } = useUser();
   const [product, setProduct] = useState(null);
-  const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const [quantities, setQuantities] = useState({});
+  const [showGoToCart, setShowGoToCart] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const productId = id || hardcodedId;
@@ -23,8 +27,8 @@ const ProductDetails = ({ productId: hardcodedId }) => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/products/${productId}`);
-        const data = res.data;
+        const res = await fetch(`http://localhost:3000/api/products/${productId}`);
+        const data = await res.json();
 
         if (data && data.variants?.length > 0) {
           setProduct(data);
@@ -33,6 +37,7 @@ const ProductDetails = ({ productId: hardcodedId }) => {
           setError('Product or variants not found');
         }
       } catch (err) {
+        console.error(err);
         setError('Failed to load product');
       } finally {
         setLoading(false);
@@ -42,49 +47,72 @@ const ProductDetails = ({ productId: hardcodedId }) => {
     if (accessToken) fetchProduct();
   }, [productId, accessToken]);
 
-  // Fetch cart count on mount
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await axios.post('http://localhost:3000/api/cart/fetch', {}, { withCredentials: true });
-        const items = res.data.items || [];
-        const total = items.reduce((sum, item) => sum + item.quantity, 0);
-        setCartCount(total);
-      } catch (err) {
-        console.warn('Cart fetch failed:', err.response?.data?.error || err.message);
+ const createCheckout = async (variantId, quantity = 1) => {
+  try {
+    // Include credentials to send cookies
+    const tokenRes = await fetch('http://localhost:3000/api/shopify/customer-token', {
+      credentials: 'include'
+    });
+    const tokenData = await tokenRes.json();
+
+    if (!tokenData.customerAccessToken) {
+      alert('User not logged in or session expired.');
+      return;
+    }
+
+    const query = `
+      mutation cartCreate($input: CartInput!) {
+        cartCreate(input: $input) {
+          cart {
+            id
+            checkoutUrl
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+
+    const variables = {
+      input: {
+        lines: [{ merchandiseId: variantId, quantity }],
+        buyerIdentity: { customerAccessToken: tokenData.customerAccessToken }
       }
     };
 
-    fetchCart();
-  }, []);
+    const response = await fetch(`https://${SHOPIFY_DOMAIN}/api/2023-10/graphql.json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN
+      },
+      body: JSON.stringify({ query, variables })
+    });
 
-  const addToCart = async (variantId, quantity = 1) => {
-    try {
-      const res = await axios.post(
-        'http://localhost:3000/api/cart/add',
-        { variantId, quantity },
-        { withCredentials: true } // Ensure cookies are sent for session tracking
-      );
+    const json = await response.json();
+    const checkoutUrl = json?.data?.cartCreate?.cart?.checkoutUrl;
 
-      const cart = res.data;
-
-      if (!cart.cartId) {
-        alert('Failed to add to cart');
-        return;
-      }
-
-      sessionStorage.setItem('cartId', cart.cartId); // Store cartId for later use
-
-      // Update cart count
-      const totalQuantity = cart.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-      setCartCount(totalQuantity);
-
-      navigate('/cart'); // Navigate to cart page after adding item
-    } catch (err) {
-      const errorMessage = err.response?.data?.error || 'Error adding to cart';
-      console.error('Add to cart failed:', err);
-      alert(errorMessage);
+    if (checkoutUrl) {
+      window.location.href = checkoutUrl;
+    } else {
+      alert(json?.data?.cartCreate?.userErrors?.[0]?.message || 'Failed to create checkout');
     }
+  } catch (error) {
+    console.error('Checkout error:', error);
+    alert('Error creating checkout');
+  }
+};
+
+  const addToCart = (variantId) => {
+    const quantity = quantities[variantId] || 1;
+    setCartItems([...cartItems, { variantId, quantity }]);
+    setShowGoToCart(true);
+  };
+
+  const goToCart = () => {
+    navigate('/cart', { state: { cartItems } });
   };
 
   const filteredVariants = useMemo(() => {
@@ -104,7 +132,6 @@ const ProductDetails = ({ productId: hardcodedId }) => {
       <div style={{ position: 'absolute', top: 20, right: 20 }}>
         <div><strong>{name}</strong></div>
         <div>{email}</div>
-        <div style={{ marginTop: '10px', fontWeight: 'bold' }}>Cart Items: {cartCount}</div>
       </div>
 
       <h1>{product.title}</h1>
@@ -125,30 +152,31 @@ const ProductDetails = ({ productId: hardcodedId }) => {
       ) : (
         <ul>
           {filteredVariants.map((variant) => (
-            <li key={variant.id}>
+            <li key={variant.id} style={{ marginBottom: '1rem' }}>
               {variant.title} - {parseFloat(variant.price).toFixed(2)} {variant.currencyCode}
+              <input
+                type="number"
+                min="1"
+                value={quantities[variant.id] || 1}
+                onChange={(e) => setQuantities({ ...quantities, [variant.id]: parseInt(e.target.value) })}
+                style={{ width: '60px', marginLeft: '10px' }}
+              />
               <button onClick={() => addToCart(variant.id)} style={{ marginLeft: '10px' }}>
                 Add to Cart
+              </button>
+              <button onClick={() => createCheckout(variant.id, quantities[variant.id] || 1)} style={{ marginLeft: '10px' }}>
+                Buy Now
               </button>
             </li>
           ))}
         </ul>
       )}
 
-      <button
-        onClick={() =>
-          navigate('/checkout', {
-            state: {
-              productId,
-              title: product.title,
-              price: filteredVariants[0]?.price || null,
-            },
-          })
-        }
-        disabled={filteredVariants.length === 0}
-      >
-        Buy Now
-      </button>
+      {showGoToCart && (
+        <button onClick={goToCart} style={{ marginTop: '2rem', backgroundColor: 'green', color: 'white', padding: '0.5rem 1rem' }}>
+          Go to Cart
+        </button>
+      )}
     </div>
   );
 };

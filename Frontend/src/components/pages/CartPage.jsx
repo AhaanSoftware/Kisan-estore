@@ -1,80 +1,105 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const SHOPIFY_DOMAIN = 'kisanestoredev.myshopify.com';
+const SHOPIFY_TOKEN = '9fa0275c43c9d14f1ad4ab3478472f5c';
 
 const CartPage = () => {
   const [cart, setCart] = useState(null);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCart = async () => {
-      try {
-        const res = await axios.post('http://localhost:3000/api/cart/fetch', {}, { withCredentials: true });
-        setCart(res.data); // Store the full cart in the state
-      } catch (err) {
-        const message = err.response?.data?.error || 'Failed to fetch cart';
-        setError(message);
-      }
+      const cartId = localStorage.getItem('cartId');
+      if (!cartId) return setLoading(false);
+
+      const query = `
+        query getCart($cartId: ID!) {
+          cart(id: $cartId) {
+            id
+            checkoutUrl
+            lines(first: 10) {
+              edges {
+                node {
+                  id
+                  quantity
+                  merchandise {
+                    ... on ProductVariant {
+                      id
+                      title
+                      price {
+                        amount
+                        currencyCode
+                      }
+                      product {
+                        title
+                        featuredImage {
+                          url
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const res = await fetch(`https://${SHOPIFY_DOMAIN}/api/2023-10/graphql.json`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN,
+        },
+        body: JSON.stringify({ query, variables: { cartId } }),
+      });
+
+      const json = await res.json();
+      setCart(json?.data?.cart);
+      setLoading(false);
     };
 
     fetchCart();
   }, []);
 
-  const handleCheckout = async () => {
-  try {
-    const res = await axios.post(
-      'http://localhost:3000/api/cart/checkout',
-      { cartId: cart.cartId },
-      { withCredentials: true }
-    );
-    const { checkoutUrl } = res.data;
-    window.open(checkoutUrl, '_blank');
-  } catch (err) {
-    alert('Failed to generate checkout: ' + (err.response?.data?.error || err.message));
-  }
-};
+  if (loading) return <div>Loading cart...</div>;
+  if (!cart) return <div>Your cart is empty.</div>;
 
-
-  if (error) return <div>{error}</div>;
-  if (!cart) return <div>Loading cart...</div>;
+  const items = cart.lines.edges;
 
   return (
-    <div style={{ padding: '2rem', backgroundColor: '#f4f4f4' }}>
-      <h2>Your Cart</h2>
-      {cart.items.length === 0 ? (
-        <p>Your cart is empty!</p>
+    <div style={{ padding: '2rem', maxWidth: '800px', margin: 'auto' }}>
+      <h1>Your Cart</h1>
+      {items.length === 0 ? (
+        <p>Your cart is empty.</p>
       ) : (
-        <>
-          <p>Total items: {cart.items.reduce((sum, item) => sum + item.quantity, 0)}</p>
-          <div>
-            {cart.items.map((item) => (
-              <div
-                key={item.variantId}
-                style={{ padding: '10px', border: '1px solid #ddd', marginBottom: '10px' }}
-              >
-                <h3>Variant ID: {item.variantId}</h3>
-                <p>Quantity: {item.quantity}</p>
-              </div>
-            ))}
-          </div>
-        </>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {items.map(({ node }) => {
+            const variant = node.merchandise;
+            return (
+              <li key={node.id} style={{ marginBottom: '1rem', borderBottom: '1px solid #ccc', paddingBottom: '1rem' }}>
+                <h3>{variant.product.title} - {variant.title}</h3>
+                {variant.product.featuredImage?.url && (
+                  <img src={variant.product.featuredImage.url} alt={variant.title} style={{ maxWidth: '150px' }} />
+                )}
+                <p>Quantity: {node.quantity}</p>
+                <p>Price: ₹{parseFloat(variant.price.amount).toFixed(2)}</p>
+              </li>
+            );
+          })}
+        </ul>
       )}
-     <button
-  onClick={handleCheckout}
-  style={{
-    padding: '10px 20px',
-    backgroundColor: '#28a745',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer'
-  }}
->
-  Go to Checkout
-</button>
 
+      <button
+        onClick={() => window.location.href = cart.checkoutUrl}
+        style={{ marginTop: '1rem' }}
+      >
+        Proceed to Checkout
+      </button>
     </div>
   );
 };
 
 export default CartPage;
-
